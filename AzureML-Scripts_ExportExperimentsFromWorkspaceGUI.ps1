@@ -12,8 +12,14 @@ $sourceWorkspace = Get-AmlWorkspace -ConfigFile 'C:\Install\AzureMLPS\config_sou
 # Define the destination folder of the output files
 $destinationFolder = 'c:\Temp\';
 
-# Get all the experiments from the source workspace
-$experiments = Get-AmlExperiment -Location $sourceWorkspace.Region -WorkspaceId $sourceWorkspace.WorkspaceId -AuthorizationToken $sourceWorkspace.AuthorizationToken.PrimaryToken
+try {
+    # Get all the experiments from the source workspace
+    $experiments = Get-AmlExperiment -Location $sourceWorkspace.Region -WorkspaceId $sourceWorkspace.WorkspaceId -AuthorizationToken $sourceWorkspace.AuthorizationToken.PrimaryToken
+}
+catch {
+    Write-host "Exception caught on getting all the experiments." -ForegroundColor Yellow
+    Write-Host $_.Exception.Message -ForegroundColor Yellow
+}
 
 # Create an empty collection to fill with selected experiment attributes
 $coll = New-Object System.Collections.ArrayList
@@ -44,6 +50,7 @@ $selected = $coll | sort-object UTC_DateTime -desc `
 foreach ($s in $selected) 
 {
     $fileName = "$($s.Description.Replace(' ', '_')).json"
+    $fileName = "$($s.Description -replace '[~#%&*{}|:<>?/|"]', '').json"
     $fullPath = [io.path]::combine($destinationFolder, $fileName);
 
     if (Test-Path $fullPath) {
@@ -52,8 +59,16 @@ foreach ($s in $selected)
         $fullPath = [io.path]::combine($destinationFolder, $fileName);
     }
 
-    Export-AmlExperimentGraph -ExperimentId $s.ExperimentId -OutputFile $fullPath `
+    try
+    {
+        Export-AmlExperimentGraph -ExperimentId $s.ExperimentId -OutputFile $fullPath `
         -Location $sourceWorkspace.Region -WorkspaceId $sourceWorkspace.WorkspaceId -AuthorizationToken $sourceWorkspace.AuthorizationToken.PrimaryToken;
+    }
+    catch
+    {
+        Write-host "Exception caught on exporting the experiment '$($s.Description)'" -ForegroundColor Yellow
+        Write-Host $_.Exception.Message -ForegroundColor Yellow
+    }
 }
 
 
