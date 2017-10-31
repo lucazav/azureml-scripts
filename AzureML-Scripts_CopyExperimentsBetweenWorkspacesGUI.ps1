@@ -39,8 +39,16 @@ $selected = $coll | sort-object UTC_DateTime -desc `
 # Copy each selected experiment from the source workspace to the destination one
 foreach ($s in $selected) 
 {
-    Copy-AmlExperiment -Location $sourceWorkspace.Region -WorkspaceId $sourceWorkspace.WorkspaceId -AuthorizationToken $sourceWorkspace.AuthorizationToken.PrimaryToken -ExperimentId $s.ExperimentId `
-        -DestinationLocation $destinationWorkspace.Region -DestinationWorkspaceId $destinationWorkspace.WorkspaceId -DestinationWorkspaceAuthorizationToken $destinationWorkspace.AuthorizationToken.PrimaryToken
+    try
+    {
+        Copy-AmlExperiment -WorkspaceId $sourceWorkspace.WorkspaceId -Location $sourceWorkspace.Region -AuthorizationToken $sourceWorkspace.AuthorizationToken.PrimaryToken -ExperimentId $s.ExperimentId `
+            -DestinationLocation $destinationWorkspace.Region -DestinationWorkspaceId $destinationWorkspace.WorkspaceId -DestinationWorkspaceAuthorizationToken $destinationWorkspace.AuthorizationToken.PrimaryToken
+    }
+    catch
+    {
+        Write-host "Exception caught on copying the experiment '$($s.Description)'" -ForegroundColor Yellow
+        Write-Host $_.Exception.Message -ForegroundColor Yellow
+    }
 }
 
 
