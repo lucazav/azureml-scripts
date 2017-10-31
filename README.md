@@ -11,6 +11,7 @@ Following a brief description of each script.
 
 * **AzureML-Scripts_CopyExperimentsBetweenWorkspacesGUI.ps1**
 After you modify the full path of your source and destination workspace config files, the script will pop out a grid view window containing all the source workspace experiments. You can choose one or more experiments (holding down the CTRL key) and then, pressing the OK button, the experiments will be copied in the destination workspace.
+Sometimes the transfer using the GUI may fail for some experiments. In that case, exporting those experiments in json files and than importing them in the destination workspace using the following scripts will solve the issue.
 
 * **AzureML-Scripts_ExportExperimentsFromWorkspaceGUI.ps1**
 After you modify the full path of your source and destination workspace config files, the script will pop out a grid view window containing all the source workspace experiments. You can choose one or more experiments (holding down the CTRL key) and then, pressing the OK button, the experiments will be extracted in the corresponding experiment graphs to a file in JSON format.
