@@ -52,8 +52,16 @@ foreach ($s in $selected)
         $fullPath = [io.path]::combine($destinationFolder, $fileName);
     }
 
-    Export-AmlExperimentGraph -ExperimentId $s.ExperimentId -OutputFile $fullPath `
+    try
+    {
+        Export-AmlExperimentGraph -ExperimentId $s.ExperimentId -OutputFile $fullPath `
         -Location $sourceWorkspace.Region -WorkspaceId $sourceWorkspace.WorkspaceId -AuthorizationToken $sourceWorkspace.AuthorizationToken.PrimaryToken;
+    }
+    catch
+    {
+        Write-host "Exception caught on exporting the experiment '$($s.Description)'" -ForegroundColor Yellow
+        Write-Host $_.Exception.Message -ForegroundColor Yellow
+    }
 }
 
 
