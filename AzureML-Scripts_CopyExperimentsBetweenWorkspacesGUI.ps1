@@ -8,8 +8,14 @@ Import-Module C:\Install\AzureMLPS\AzureMLPS.dll
 $sourceWorkspace = Get-AmlWorkspace -ConfigFile 'C:\Install\AzureMLPS\config_source.json'
 $destinationWorkspace = Get-AmlWorkspace -ConfigFile 'C:\Install\AzureMLPS\config_destination.json'
 
-# Get all the experiments from the source workspace
-$experiments = Get-AmlExperiment -Location $sourceWorkspace.Region -WorkspaceId $sourceWorkspace.WorkspaceId -AuthorizationToken $sourceWorkspace.AuthorizationToken.PrimaryToken
+try {
+    # Get all the experiments from the source workspace
+    $experiments = Get-AmlExperiment -WorkspaceId $sourceWorkspace.WorkspaceId -Location $sourceWorkspace.Region -AuthorizationToken $sourceWorkspace.AuthorizationToken.PrimaryToken
+}
+catch {
+    Write-host "Exception caught on getting all the experiments." -ForegroundColor Yellow
+    Write-Host $_.Exception.Message -ForegroundColor Yellow
+}
 
 # Create an empty collection to fill with selected experiment attributes
 $coll = New-Object System.Collections.ArrayList
