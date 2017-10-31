@@ -19,12 +19,12 @@ $useFileNames = $true;
 if (!$useFileNames)
 {
     dir "$sourceFolder\*.json" | out-gridview -Title "JSON Files of the Source Experiments" -passthru `
-        | foreach { Import-AmlExperimentGraph -InputFile $_.fullname `
+        | foreach { Import-AmlExperimentGraph -InputFile $_.fullname -Location $destinationWorkspace.Region `
                     -WorkspaceId $destinationWorkspace.WorkspaceId -AuthorizationToken $destinationWorkspace.AuthorizationToken.PrimaryToken}
 }
 else
 {
     dir "$sourceFolder\*.json" | out-gridview -Title "JSON Files of the Source Experiments" -passthru `
-        | foreach { Import-AmlExperimentGraph -InputFile $_.fullname -NewName $_.BaseName`
+        | foreach { Import-AmlExperimentGraph -InputFile $_.fullname -NewName $_.BaseName -Location $destinationWorkspace.Region `
                     -WorkspaceId $destinationWorkspace.WorkspaceId -AuthorizationToken $destinationWorkspace.AuthorizationToken.PrimaryToken}
 }
