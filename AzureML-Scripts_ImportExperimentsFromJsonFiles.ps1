@@ -19,12 +19,26 @@ $useFileNames = $true;
 if (!$useFileNames)
 {
     dir "$sourceFolder\*.json" | out-gridview -Title "JSON Files of the Source Experiments" -passthru `
-        | foreach { Import-AmlExperimentGraph -InputFile $_.fullname -Location $destinationWorkspace.Region `
-                    -WorkspaceId $destinationWorkspace.WorkspaceId -AuthorizationToken $destinationWorkspace.AuthorizationToken.PrimaryToken}
+        | foreach { 
+            try {
+                $e = $_
+                Import-AmlExperimentGraph -InputFile $e.fullname -Location $destinationWorkspace.Region `
+                    -WorkspaceId $destinationWorkspace.WorkspaceId -AuthorizationToken $destinationWorkspace.AuthorizationToken.PrimaryToken }
+            catch {
+                Write-host "Exception caught on exporting the experiment '$($e.Name)'" -ForegroundColor Yellow
+                Write-Host $_.Exception.Message -ForegroundColor Yellow }
+          }
 }
 else
 {
     dir "$sourceFolder\*.json" | out-gridview -Title "JSON Files of the Source Experiments" -passthru `
-        | foreach { Import-AmlExperimentGraph -InputFile $_.fullname -NewName $_.BaseName -Location $destinationWorkspace.Region `
-                    -WorkspaceId $destinationWorkspace.WorkspaceId -AuthorizationToken $destinationWorkspace.AuthorizationToken.PrimaryToken}
+        | foreach {
+            try {
+                $e = $_
+                Import-AmlExperimentGraph -InputFile $e.fullname -NewName $e.BaseName -Location $destinationWorkspace.Region `
+                    -WorkspaceId $destinationWorkspace.WorkspaceId -AuthorizationToken $destinationWorkspace.AuthorizationToken.PrimaryToken }
+            catch {
+                Write-host "Exception caught on exporting the experiment '$($e.Name)'" -ForegroundColor Yellow
+                Write-Host $_.Exception.Message -ForegroundColor Yellow }
+          }
 }
