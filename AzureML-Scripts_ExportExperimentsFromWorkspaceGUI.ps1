@@ -50,6 +50,7 @@ $selected = $coll | sort-object UTC_DateTime -desc `
 foreach ($s in $selected) 
 {
     $fileName = "$($s.Description.Replace(' ', '_')).json"
+    $fileName = "$($s.Description -replace '[~#%&*{}|:<>?/|"]', '').json"
     $fullPath = [io.path]::combine($destinationFolder, $fileName);
 
     if (Test-Path $fullPath) {
