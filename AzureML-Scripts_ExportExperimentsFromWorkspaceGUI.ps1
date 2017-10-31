@@ -13,7 +13,7 @@ $sourceWorkspace = Get-AmlWorkspace -ConfigFile 'C:\Install\AzureMLPS\config_sou
 $destinationFolder = 'c:\Temp\';
 
 # Get all the experiments from the source workspace
-$experiments = Get-AmlExperiment -WorkspaceId $sourceWorkspace.WorkspaceId -AuthorizationToken $sourceWorkspace.AuthorizationToken.PrimaryToken
+$experiments = Get-AmlExperiment -Location $sourceWorkspace.Region -WorkspaceId $sourceWorkspace.WorkspaceId -AuthorizationToken $sourceWorkspace.AuthorizationToken.PrimaryToken
 
 # Create an empty collection to fill with selected experiment attributes
 $coll = New-Object System.Collections.ArrayList
@@ -53,7 +53,7 @@ foreach ($s in $selected)
     }
 
     Export-AmlExperimentGraph -ExperimentId $s.ExperimentId -OutputFile $fullPath `
-        -WorkspaceId $sourceWorkspace.WorkspaceId -AuthorizationToken $sourceWorkspace.AuthorizationToken.PrimaryToken;
+        -Location $sourceWorkspace.Region -WorkspaceId $sourceWorkspace.WorkspaceId -AuthorizationToken $sourceWorkspace.AuthorizationToken.PrimaryToken;
 }
 
 
