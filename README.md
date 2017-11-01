@@ -1,5 +1,5 @@
 # azureml-scripts
-##Useful PowerShell scripts to manage your Azure Machine Learning stuff in a simply way.
+## Useful PowerShell scripts to manage your Azure Machine Learning stuff in a simply way.
 
 These scripts use the *PowerShell Module for Azure Machine Learning Studio & Web Services* you can download from here:
 
